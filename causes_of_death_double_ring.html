@@ -1,0 +1,110 @@
+
+<div style="padding: 1.5rem 1rem 1rem; font-family: var(--font-sans);">
+
+  <div style="display: flex; justify-content: center; gap: 32px; margin-bottom: 1rem;">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary);">
+      <span style="display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid #555;"></span>
+      Inner ring — 2025
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary);">
+      <span style="display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid #555;opacity:0.5;"></span>
+      Outer ring — 2024
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; justify-content: center; gap: 0;">
+    <div style="position: relative; width: 460px; max-width: 100%; height: 460px; flex-shrink: 0;">
+      <canvas id="doubleRing" role="img" aria-label="Double ring doughnut chart comparing causes of migrant deaths in 2025 (inner) and 2024 (outer). Drowning is the leading cause in both years.">Causes of death comparison 2024 vs 2025: Drowning, harsh environment, sickness, hazardous transport, violence, accidental death, mixed/unknown.</canvas>
+    </div>
+    <div id="legend" style="display: flex; flex-direction: column; gap: 7px; flex-shrink: 0;"></div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 1rem;">
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; text-align: center;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em;">Total 2024</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">9,197</div>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; text-align: center;">
+      <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em;">Total 2025</div>
+      <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">7,897</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const labels = ['Drowning','Harsh environment','Sickness','Hazardous transport','Violence','Accidental death','Mixed / unknown'];
+const colors = ['#0033A0','#FF671F','#5CB8B2','#FFB81C','#8099D0','#EF413D','#DD8F2C'];
+const colorsOuter = colors.map(c => c + 'B3');
+
+const data2024 = [4645, 848, 685, 835, 835, 322, 1027];
+const data2025 = [4450, 615, 654, 524, 664, 175, 815];
+const total2024 = data2024.reduce((a,b)=>a+b,0);
+const total2025 = data2025.reduce((a,b)=>a+b,0);
+
+const borderCol = 'rgba(255,255,255,0.85)';
+
+const legendEl = document.getElementById('legend');
+labels.forEach((lbl, i) => {
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:center;gap:6px;';
+  row.innerHTML = `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${colors[i]};flex-shrink:0;"></span><span style="font-size:12px;color:var(--color-text-secondary);">${lbl}</span>`;
+  legendEl.appendChild(row);
+});
+
+new Chart(document.getElementById('doubleRing'), {
+  type: 'doughnut',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '2025',
+        data: data2025,
+        backgroundColor: colors,
+        borderColor: borderCol,
+        borderWidth: 2.5,
+        hoverOffset: 8,
+        weight: 1
+      },
+      {
+        label: '2024',
+        data: data2024,
+        backgroundColor: colorsOuter,
+        borderColor: borderCol,
+        borderWidth: 2.5,
+        hoverOffset: 8,
+        weight: 1
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '58%',
+    layout: { padding: 8 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(255,255,255,0.97)',
+        titleColor: '#111',
+        bodyColor: '#555',
+        borderColor: 'rgba(0,0,0,0.1)',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          title(items) { return items[0].label; },
+          label(item) {
+            const year = item.datasetIndex === 0 ? '2025' : '2024';
+            const total = item.datasetIndex === 0 ? total2025 : total2024;
+            const pct = ((item.parsed / total) * 100).toFixed(1);
+            return ` ${year}: ${item.parsed.toLocaleString()}  (${pct}%)`;
+          }
+        }
+      }
+    },
+    animation: { animateRotate: true, duration: 900, easing: 'easeInOutQuart' }
+  }
+});
+</script>
