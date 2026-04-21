@@ -15,8 +15,8 @@
 
 <div class="mmp-wrap">
   <div class="mmp-legend">
-    <span class="mmp-li"><span class="mmp-sw" style="background:#0033A0;"></span>Dead or missing</span>
-    <span class="mmp-li"><span class="mmp-sw" style="background:rgba(128,153,208,0.65);"></span>Affected households</span>
+    <span class="mmp-li"><span class="mmp-sw" style="background:#0033A0;"></span>Dead or missing migrants</span>
+    <span class="mmp-li"><span class="mmp-sw" style="background:rgba(128,153,208,0.65);"></span>Affected family members</span>
     <span class="mmp-li">
       <span style="display:inline-flex;align-items:center;gap:0;flex-shrink:0;width:18px;height:14px;position:relative;">
         <span style="position:absolute;left:0;right:0;height:1.5px;background:#FF671F;top:50%;transform:translateY(-50%);border-radius:1px;"></span>
@@ -28,16 +28,16 @@
   </div>
 
   <div class="mmp-row">
-    <div class="mmp-axlabel"><span>Dead or missing</span></div>
+    <div class="mmp-axlabel"><span>Dead or missing migrants</span></div>
     <div class="mmp-canwrap" style="height:clamp(75px,13vw,115px);">
-      <canvas id="topChart" role="img" aria-label="Dead or missing persons by country, bars extend upward"></canvas>
+      <canvas id="topChart" role="img" aria-label="Dead or missing migrants persons by country, bars extend upward"></canvas>
     </div>
   </div>
 
   <div class="mmp-row" style="margin-top:-1px;">
-    <div class="mmp-axlabel"><span>Affected households</span></div>
+    <div class="mmp-axlabel"><span>Affected family members</span></div>
     <div class="mmp-canwrap" style="height:clamp(280px,50vw,440px);">
-      <canvas id="botChart" role="img" aria-label="Affected households by country, bars extend downward with orange uncertainty lines"></canvas>
+      <canvas id="botChart" role="img" aria-label="Affected family members by country, bars extend downward with orange uncertainty lines"></canvas>
     </div>
   </div>
 
@@ -106,7 +106,7 @@ new Chart(document.getElementById('topChart'), {
         ...tooltipBase,
         callbacks:{
           title: items => items[0].label,
-          label: item => ` Dead or missing: ${raw[item.dataIndex].dead.toLocaleString()}`
+          label: item => ` Dead or missing migrants: ${raw[item.dataIndex].dead.toLocaleString()}`
         }
       }
     }
